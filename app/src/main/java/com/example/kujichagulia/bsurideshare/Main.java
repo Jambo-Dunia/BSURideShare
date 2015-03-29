@@ -20,7 +20,8 @@ package com.example.kujichagulia.bsurideshare;
 public class Main extends Activity {
         Button loginButton;
         Button changepass;
-
+        Button rides;
+        public static String userName;
         /**
          * Called when the activity is first created.
          */
@@ -30,15 +31,20 @@ public class Main extends Activity {
             setContentView(R.layout.main);
             changepass = (Button) findViewById(R.id.button9);
             loginButton = (Button) findViewById(R.id.button8);
+            rides = (Button) findViewById(R.id.button10);
+
+
             DatabaseHandler db = new DatabaseHandler(getApplicationContext());
             /**
              * Hashmap to load data from the Sqlite database
              **/
             HashMap user = new HashMap();
             user = db.getUserDetails();
-            /**
+            /**Intent change = new Intent(getApplicationContext(), Rides.class);
+                    startActivity(change);
              * Change Password Activity Started
              **/
+            userName = user.get("uname").toString();
             changepass.setOnClickListener(new View.OnClickListener(){
                 public void onClick(View arg0){
                     Intent change = new Intent(getApplicationContext(), PassChange.class);
@@ -58,11 +64,33 @@ public class Main extends Activity {
                     finish();
                 }
             });
+
+            // Create button
+            Button addride = (Button) findViewById(R.id.button11);
+
+            // button click event
+            addride.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    // creating new product in background thread
+                    Intent change = new Intent(getApplicationContext(), AddRide.class);
+                    startActivity(change);
+                }
+            });
+
+            rides.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent change = new Intent(getApplicationContext(), Rides.class);
+                    startActivity(change);
+                }
+            });
 /**
  * Sets user first name and last name in text view.
  **/
             final TextView name = (TextView) findViewById(R.id.textView8);
-            name.setText("Welcome  " + user.get("uname"));
+            name.setText("Welcome  " + userName);
 
         }
     }

@@ -41,5 +41,22 @@
             android:layout_marginTop="55dp"
             android:layout_below="@+id/textView5"
             android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="rides"
+            android:id="@+id/button10"
+            android:layout_below="@+id/button11"
+            android:layout_alignStart="@+id/button8" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="add rides"
+            android:id="@+id/button11"
+            android:layout_marginTop="63dp"
+            android:layout_below="@+id/button9"
+            android:layout_centerHorizontal="true" />
     </RelativeLayout>
 </LinearLayout>
