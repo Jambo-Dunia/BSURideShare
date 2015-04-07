@@ -21,6 +21,7 @@ public class Main extends Activity {
         Button loginButton;
         Button changepass;
         Button rides;
+        Button messages;
         public static String userName;
         /**
          * Called when the activity is first created.
@@ -32,6 +33,7 @@ public class Main extends Activity {
             changepass = (Button) findViewById(R.id.button9);
             loginButton = (Button) findViewById(R.id.button8);
             rides = (Button) findViewById(R.id.button10);
+            messages = (Button) findViewById(R.id.button15);
 
 
             DatabaseHandler db = new DatabaseHandler(getApplicationContext());
@@ -62,6 +64,14 @@ public class Main extends Activity {
                     login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(login);
                     finish();
+                }
+            });
+
+            messages.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent change = new Intent(getApplicationContext(), Messages.class);
+                    startActivity(change);
                 }
             });
 

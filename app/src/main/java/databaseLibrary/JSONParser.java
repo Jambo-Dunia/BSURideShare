@@ -49,7 +49,7 @@ public class JSONParser {
                 HttpEntity httpEntity = httpResponse.getEntity();
                 is = httpEntity.getContent();
 
-            }else if(method == "GET"){
+            }else if (method == "GET") {
                 // request method is GET
                 DefaultHttpClient httpClient = new DefaultHttpClient();
                 String paramString = URLEncodedUtils.format(params, "utf-8");

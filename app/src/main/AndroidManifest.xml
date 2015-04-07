@@ -28,6 +28,16 @@
         </activity>
         <activity android:label="@string/app_name" android:name=".AddRide">
         </activity>
+        <activity android:label="@string/app_name" android:name=".RideDetail">
+        </activity>
+        <activity android:label="@string/app_name" android:name=".MakeMes">
+        </activity>
+        <activity android:label="@string/app_name" android:name=".Messages">
+        </activity>
+        <activity android:label="@string/app_name" android:name=".MessageDetail">
+        </activity>
+
+
 
     </application>
 

@@ -23,6 +23,8 @@ public class UserFunctions {
     private static String chgpass_tag = "chgpass";
     private static String addride_tag = "addride";
     private static String getrides_tag = "getrides";
+    private static String getride_tag = "getride";
+
     // constructor
     public UserFunctions(){
         jsonParser = new JSONParser();
@@ -86,11 +88,33 @@ public class UserFunctions {
         JSONObject json = jsonParser.makeHttpRequest(addrideURL,"POST", params);
         return json;
     }
-    //function to get rides
+    //function to get all rides
     public JSONObject getRides(){
         // Building Parameters
         List params = new ArrayList();
         params.add(new BasicNameValuePair("tag", getrides_tag));
+        JSONObject json = jsonParser.makeHttpRequest(loginURL,"POST", params);
+        return json;
+    }
+
+    public JSONObject getMessages(String username){
+        // Building Parameters
+        List params = new ArrayList();
+        params.add(new BasicNameValuePair("tag", "getmess"));
+        params.add(new BasicNameValuePair("username", username));
+        JSONObject json = jsonParser.makeHttpRequest(loginURL,"POST", params);
+        return json;
+    }
+
+    //function to get 1 ride
+    public JSONObject addMessage(String to,String from,String mess){
+        // Building Parameters
+        List params = new ArrayList();
+        params.add(new BasicNameValuePair("tag","addmess"));
+        params.add(new BasicNameValuePair("to",to ));
+        params.add(new BasicNameValuePair("from",from ));
+        params.add(new BasicNameValuePair("message",mess ));
+
         JSONObject json = jsonParser.makeHttpRequest(loginURL,"POST", params);
         return json;
     }

@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -26,44 +24,30 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import databaseLibrary.JSONParser;
 import databaseLibrary.UserFunctions;
 
 /**
- * Created by kujichagulia on 3/28/15.
+ * Created by kujichagulia on 4/6/15.
  */
-public class Rides extends ListActivity {
+public class Messages extends ListActivity {
 
-    ArrayList<HashMap<String, String>> rideList;
-
-    // Progress Dialog
+    ArrayList<HashMap<String, String>> messageList;
+    static LinkedList<MessageObj> messData = new LinkedList<MessageObj>();
     private ProgressDialog pDialog;
 
-    JSONArray rides = null;
-
-    // JSON Node names
-    private static final String TAG_SUCCESS = "success";
-    private static final String TAG_RIDES = "rides";
-    private static final String TAG_PID = "pid";
-    private static final String TAG_UNAME = "username";
-    private static final String TAG_CAR = "car";
-    private static final String TAG_SEATS = "seats";
-    private static final String TAG_DESC = "description";
-    //private static final String TAG_AV = "avail";
-
-    static LinkedList<RideObject> rideData = new LinkedList<RideObject>();
+    JSONArray messages = null;
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.rides);
+        setContentView(R.layout.messages);
 
 
         // Hashmap for ListView
-        rideList = new ArrayList<HashMap<String, String>>();
+        messageList = new ArrayList<HashMap<String, String>>();
 
         // Loading products in Background Thread
-        new LoadAllRides().execute();
+        new LoadAllMess().execute();
 
         ListView lv = getListView();
 
@@ -78,23 +62,22 @@ public class Rides extends ListActivity {
                 String pid = ((TextView) view.findViewById(R.id.pid)).getText()
                         .toString();
 
-                // Starting new intent
-                Intent in = new Intent(getApplicationContext(),
-                        RideDetail.class);
-                // sending pid to next activity
-                in.putExtra(TAG_PID, pid);
+               // Starting new intent
+               Intent in = new Intent(getApplicationContext(),
+                       MessageDetail.class);
 
-                // starting new activity and expecting some response back
-                startActivity(in);
+                in.putExtra("mid", pid);
+
+
+               startActivity(in);
             }
         });
     }
 
-
     /**
      * Background Async Task to Load all product by making HTTP Request
      * */
-    class LoadAllRides extends AsyncTask<String, String, String> {
+    class LoadAllMess extends AsyncTask<String, String, String> {
 
         /**
          * Before starting background thread Show Progress Dialog
@@ -102,8 +85,8 @@ public class Rides extends ListActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(Rides.this);
-            pDialog.setMessage("Loading Rides. Please wait...");
+            pDialog = new ProgressDialog(Messages.this);
+            pDialog.setMessage("Loading Messages. Please wait...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
             pDialog.show();
@@ -117,7 +100,7 @@ public class Rides extends ListActivity {
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             // getting JSON string from URL
             UserFunctions userFunction = new UserFunctions();
-            JSONObject json = userFunction.getRides();
+            JSONObject json = userFunction.getMessages(Main.userName);
 
             // Check your log cat for JSON reponse
             Log.d("All Products: ", json.toString());
@@ -125,42 +108,43 @@ public class Rides extends ListActivity {
 
             try {
                 // Checking for SUCCESS TAG
-                int success = json.getInt(TAG_SUCCESS);
+                int success = json.getInt("success");
 
                 if (success == 1) {
                     // products found
                     // Getting Array of Products
-                    rides = json.getJSONArray(TAG_RIDES);
+                    messages = json.getJSONArray("messages");
 
                     // looping through All Products
-                    for (int i = 0; i < rides.length(); i++) {
-                        JSONObject c = rides.getJSONObject(i);
+                    for (int i = 0; i < messages.length(); i++) {
+                        JSONObject c = messages.getJSONObject(i);
 
                         // Storing each json item in variable
-                        String id = c.getString(TAG_PID);
-                        String name = c.getString(TAG_CAR);
-                        String seats = c.getString(TAG_SEATS);
-                        String info = c.getString(TAG_DESC);
-                        String u = c.getString(TAG_UNAME);
+                        String id = c.getString("mid");
+                        String name = c.getString("username");
+                        String from = c.getString("fr");
+                        String info = c.getString("message");
+                        String ca = c.getString("created_at");
 
-                        RideObject r = new RideObject(name,seats,u,info,id);
-                        rideData.add(r);
+
+                       MessageObj m = new MessageObj(id,name,from,info,ca);
+                        messData.add(m);
 
                         // creating new HashMap
                         HashMap<String, String> map = new HashMap<String, String>();
 
                         // adding each child node to HashMap key => value
-                        map.put(TAG_PID, id);
-                        map.put(TAG_CAR, name);
+                        map.put("mid", id);
+                        map.put("fr", from);
 
                         // adding HashList to ArrayList
-                        rideList.add(map);
+                        messageList.add(map);
                     }
                 } else {
                     // no products found
                     // Launch Add New product Activity
                     Intent i = new Intent(getApplicationContext(),
-                            Rides.class);
+                            Main.class);
                     // Closing all previous activities
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
@@ -186,9 +170,9 @@ public class Rides extends ListActivity {
                      * Updating parsed JSON data into ListView
                      * */
                     ListAdapter adapter = new SimpleAdapter(
-                            Rides.this, rideList,
-                            R.layout.list_item, new String[]{TAG_PID,
-                            TAG_CAR},
+                            Messages.this, messageList,
+                            R.layout.list_item2, new String[]{"mid",
+                            "fr"},
                             new int[]{R.id.pid, R.id.name});
                     // updating listview
                     setListAdapter(adapter);
@@ -197,7 +181,6 @@ public class Rides extends ListActivity {
 
         }
     }
-
 
 
 }
